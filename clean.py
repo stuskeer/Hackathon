@@ -1,7 +1,6 @@
 import pandas as pd
 from ingest import load_excel_data
 from config import EDINBURGH_COLUMNS, STRATHSPEY_COLUMNS
-import re
 
 # start with data loading
 edinburgh_df, strathspey_df = load_excel_data()
