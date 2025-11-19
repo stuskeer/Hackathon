@@ -13,8 +13,8 @@ def clean_str_columns(value):
     value = str(value)
     # fix minus sign
     value = re.sub('−', '-', value)
-    # remove unwanted characters
-    value = re.sub('[^:()-°\d]', '', value)
+    # remove unwanted characters (-, °, ↑)
+    value = re.sub('[-°↑]', '', value)
     # remove extra spaces
     value = re.sub(' +', ' ', unicodedata.normalize('NFKD', value)).strip()
     if value in ['Restofnight', 'Rest of night']:

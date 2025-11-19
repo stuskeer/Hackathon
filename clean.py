@@ -81,7 +81,29 @@ for sheet_name in strathspey_df:
         else:
             strathspey_df[sheet_name][col] = strathspey_df[sheet_name][col].astype(dtype)
 
+# Cleans string columns - applies string cleaning to text fields
+def clean_string_column(series):
+    series = series.astype(str).str.strip()  # Remove leading/trailing whitespace
+    series = series.str.replace(r'[-°↑()]', '', regex=True)  # Remove -, °, ↑, (, and ) characters
+    series = series.replace({'': None, 'nan': None, 'NaN': None})  # Replace empty strings with None
+    return series
 
+# trim sunrise/sunset columns to remove anything but time in edinburgh data
+for sheet_name in edinburgh_df: 
+    if 'sunrise' in edinburgh_df[sheet_name].columns:
+        edinburgh_df[sheet_name]['sunrise'] = edinburgh_df[sheet_name]['sunrise'].astype(str).str.extract(r'(\d{1,2}:\d{2})')[0]
+    if 'sunset' in edinburgh_df[sheet_name].columns:
+        edinburgh_df[sheet_name]['sunset'] = edinburgh_df[sheet_name]['sunset'].astype(str).str.extract(r'(\d{1,2}:\d{2})')[0]
+# Apply string cleaning to all string columns in both dataframes
+for sheet_name in edinburgh_df:
+    for col in edinburgh_df[sheet_name].columns:
+        if edinburgh_df[sheet_name][col].dtype == 'object':
+            edinburgh_df[sheet_name][col] = clean_string_column(edinburgh_df[sheet_name][col])
+
+for sheet_name in strathspey_df:
+    for col in strathspey_df[sheet_name].columns:
+        if strathspey_df[sheet_name][col].dtype == 'object':
+            strathspey_df[sheet_name][col] = clean_string_column(strathspey_df[sheet_name][col])
 
 # print data heads after dropping headers and emopty rows
 print("Edinburgh Daytime Data after dropping headers and empty rows:")
@@ -91,6 +113,10 @@ for sheet_name in edinburgh_df:
 print("\nStrathspey Daytime Data after dropping headers and empty rows:")
 for sheet_name in strathspey_df:
     print(strathspey_df[sheet_name].head())
+
+
+
+
 
 '''
 # remove nan values
