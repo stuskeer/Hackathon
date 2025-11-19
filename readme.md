@@ -7,30 +7,34 @@ A data processing pipeline that ingests, cleans, and combines weather and daylig
 ```
 Hackathon/
 ├── main.py                 # Main pipeline orchestrator
-├── ingest.py              # Data loading module
-├── clean.py               # Data cleaning and processing module
-├── resample.py            # Data combination and resampling module
-├── config.py              # Column definitions and data types
-├── requirements.txt       # Python package dependencies
-├── readme.md             # Project documentation
-├── data/                 # Source data directory
+├── pipeline/               # Pipeline processing modules
+│   ├── __init__.py
+│   ├── ingest.py          # Data loading module
+│   ├── clean.py           # Data cleaning and processing module
+│   └── resample.py        # Data combination and resampling module
+├── config/                 # Configuration files
+│   ├── __init__.py
+│   └── config.py          # Column definitions and data types
+├── requirements.txt        # Python package dependencies
+├── readme.md              # Project documentation
+├── data/                  # Source data directory
 │   ├── Edinburgh-daytime.xlsx
 │   └── Strathspey-weather.xlsx
-├── dataOut/              # Output directory
+├── dataOut/               # Output directory
 │   ├── combined_data.csv
 │   └── temperature_minute_2012.csv
-└── __pycache__/          # Python cache files
+└── __pycache__/           # Python cache files
 ```
 
 ## Project Modules
 
-### `ingest.py`
+### `pipeline/ingest.py`
 Loads Excel data from Edinburgh daytime and Strathspey weather files (multi-sheet workbooks)
 
-### `config.py`
+### `config/config.py`
 Contains column definitions and data type specifications for both datasets
 
-### `clean.py`
+### `pipeline/clean.py`
 Cleans and processes data from both sources:
   - Removes header rows and empty rows
   - Applies column names from config
@@ -38,7 +42,7 @@ Cleans and processes data from both sources:
   - Cleans string columns and extracts sunrise/sunset times
   - Concatenates all sheets into single dataframes
 
-### `resample.py`
+### `pipeline/resample.py`
 Combines and resamples the data:
   - Merges Edinburgh and Strathspey dataframes on the 'date' column
   - Filters data for 2012
@@ -79,9 +83,9 @@ This will sequentially run:
 ### Run Individual Scripts
 For debugging or partial processing:
 ```bash
-python ingest.py        # Load and inspect Excel data
-python clean.py         # Clean and process data only
-python resample.py      # Combine and resample (requires cleaned data)
+python pipeline/ingest.py        # Load and inspect Excel data
+python pipeline/clean.py         # Clean and process data only
+python pipeline/resample.py      # Combine and resample (requires cleaned data)
 ```
 
 ## Output Files
@@ -117,6 +121,7 @@ Minute-level temperature estimates for the entire year 2012:
 
 ## Recent Updates
 
+- **Code Organization**: Restructured project with `pipeline/` and `config/` folders for better modularity
 - **Sinusoidal Temperature Modeling**: Replaced linear interpolation with sinusoidal curves for more realistic temperature patterns throughout the day
 - **Precision Enhancement**: All temperature outputs now rounded to 4 decimal places
 - **Integrated Pipeline**: Main.py now orchestrates the complete workflow from ingestion through output generation

@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from clean import edinburgh_df, strathspey_df
+from pipeline.clean import edinburgh_df, strathspey_df
 
 # combine two dataframes created on clean.py on 'date' column
 def combine(df1: pd.DataFrame, df2: pd.DataFrame) -> pd.DataFrame:

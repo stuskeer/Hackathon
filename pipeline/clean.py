@@ -1,6 +1,6 @@
 import pandas as pd
-from ingest import load_excel_data
-from config import EDINBURGH_COLUMNS, STRATHSPEY_COLUMNS
+from pipeline.ingest import load_excel_data
+from config.config import EDINBURGH_COLUMNS, STRATHSPEY_COLUMNS
 
 # start with data loading
 edinburgh_df, strathspey_df = load_excel_data()

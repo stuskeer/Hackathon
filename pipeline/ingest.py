@@ -3,8 +3,8 @@ import os
 
 def load_excel_data():
 
-    # Define data directory
-    data_dir = os.path.join(os.path.dirname(__file__), 'data')
+    # Define data directory - go up one level from pipeline folder
+    data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
     
     # Load Edinburgh daytime data - all sheets
     edinburgh_path = os.path.join(data_dir, 'Edinburgh-daytime.xlsx')
