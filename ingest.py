@@ -6,15 +6,13 @@ def load_excel_data():
     # Define data directory
     data_dir = os.path.join(os.path.dirname(__file__), 'data')
     
-    # Load Edinburgh daytime data
+    # Load Edinburgh daytime data - all sheets
     edinburgh_path = os.path.join(data_dir, 'Edinburgh-daytime.xlsx')
-    edinburgh_df = pd.read_excel(edinburgh_path)
-    print(f"Loaded Edinburgh data: {edinburgh_df.shape[0]} rows, {edinburgh_df.shape[1]} columns")
+    edinburgh_df = pd.read_excel(edinburgh_path, sheet_name=None)  # Returns dict of DataFrames
     
-    # Load Strathspey weather data
+    # Load Strathspey weather data - all sheets
     strathspey_path = os.path.join(data_dir, 'Strathspey-weather.xlsx')
-    strathspey_df = pd.read_excel(strathspey_path)
-    print(f"Loaded Strathspey data: {strathspey_df.shape[0]} rows, {strathspey_df.shape[1]} columns")
+    strathspey_df = pd.read_excel(strathspey_path, sheet_name=None)  # Returns dict of DataFrames
     
     return edinburgh_df, strathspey_df
 
@@ -23,11 +21,14 @@ if __name__ == "__main__":
     # Load the data
     edinburgh_df, strathspey_df = load_excel_data()
     
-    # Display basic information
-    print("\n=== Edinburgh Daytime Data ===")
-    print(edinburgh_df.head())
-    print(f"\nColumns: {list(edinburgh_df.columns)}")
-    
-    print("\n=== Strathspey Weather Data ===")
-    print(strathspey_df.head())
-    print(f"\nColumns: {list(strathspey_df.columns)}")
+    print("Edinburgh Daytime Data:")
+    for sheet_name, df in edinburgh_df.items():
+        print(f"\n--- Sheet: {sheet_name} ---")
+        print(df.head())
+        print(f"Columns: {list(df.columns)}")
+
+    print("\nStrathspey Weather Data:")
+    for sheet_name, df in strathspey_df.items():
+        print(f"\n--- Sheet: {sheet_name} ---")
+        print(df.head())
+        print(f"Columns: {list(df.columns)}")
