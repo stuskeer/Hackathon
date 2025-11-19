@@ -1,6 +1,7 @@
 import pandas as pd
 from ingest import load_excel_data
 from config import EDINBURGH_COLUMNS, STRATHSPEY_COLUMNS
+import re
 
 # start with data loading
 edinburgh_df, strathspey_df = load_excel_data()
@@ -23,8 +24,17 @@ for sheet_name in strathspey_df:
 for sheet_name in edinburgh_df:
     edinburgh_df[sheet_name].columns = list(EDINBURGH_COLUMNS.keys())
     # Convert dtypes, handling datetime columns separately
+    first_col = list(EDINBURGH_COLUMNS.keys())[0]
     for col, dtype in EDINBURGH_COLUMNS.items():
-        if dtype == pd.Timestamp or dtype == 'datetime64[ns]':
+        if col == first_col and (dtype == pd.Timestamp or dtype == 'datetime64[ns]'):
+            # Parse sheet name format YYMM (e.g., '1112' = Nov 2011)
+            year = '20' + sheet_name[:2]
+            month = sheet_name[2:4]
+            day = pd.to_numeric(edinburgh_df[sheet_name][col], errors='coerce')
+            # Create date strings by combining year-month-day
+            date_strings = year + '-' + month + '-' + day.fillna(0).astype(int).astype(str)
+            edinburgh_df[sheet_name][col] = pd.to_datetime(date_strings, format='%Y-%m-%d', errors='coerce')
+        elif dtype == pd.Timestamp or dtype == 'datetime64[ns]':
             edinburgh_df[sheet_name][col] = pd.to_datetime(edinburgh_df[sheet_name][col], errors='coerce')
         elif dtype in [float, 'float64', 'float32']:
             # Replace comma with period for European decimal format
@@ -40,8 +50,17 @@ for sheet_name in edinburgh_df:
 for sheet_name in strathspey_df:
     strathspey_df[sheet_name].columns = list(STRATHSPEY_COLUMNS.keys())
     # Convert dtypes, handling datetime columns separately
+    first_col = list(STRATHSPEY_COLUMNS.keys())[0]
     for col, dtype in STRATHSPEY_COLUMNS.items():
-        if dtype == pd.Timestamp or dtype == 'datetime64[ns]':
+        if col == first_col and (dtype == pd.Timestamp or dtype == 'datetime64[ns]'):
+            # Parse sheet name format YYMM
+            year = '20' + sheet_name[:2]
+            month = sheet_name[2:4]
+            day = pd.to_numeric(strathspey_df[sheet_name][col], errors='coerce')
+            # Create date strings by combining year-month-day
+            date_strings = year + '-' + month + '-' + day.fillna(0).astype(int).astype(str)
+            strathspey_df[sheet_name][col] = pd.to_datetime(date_strings, format='%Y-%m-%d', errors='coerce')
+        elif dtype == pd.Timestamp or dtype == 'datetime64[ns]':
             strathspey_df[sheet_name][col] = pd.to_datetime(strathspey_df[sheet_name][col], errors='coerce')
         elif dtype in [float, 'float64', 'float32']:
             # Replace comma with period for European decimal format
