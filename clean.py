@@ -105,37 +105,10 @@ for sheet_name in strathspey_df:
         if strathspey_df[sheet_name][col].dtype == 'object':
             strathspey_df[sheet_name][col] = clean_string_column(strathspey_df[sheet_name][col])
 
-# print data heads after dropping headers and emopty rows
-print("Edinburgh Daytime Data after dropping headers and empty rows:")
-for sheet_name in edinburgh_df:
-    print(edinburgh_df[sheet_name].head())
 
-print("\nStrathspey Daytime Data after dropping headers and empty rows:")
-for sheet_name in strathspey_df:
-    print(strathspey_df[sheet_name].head())
+# concat the sheets into single dataframes
+edinburgh_df = pd.concat(edinburgh_df.values(), ignore_index=True)
+strathspey_df = pd.concat(strathspey_df.values(), ignore_index=True)
 
-
-
-
-
-'''
-# remove nan values
-for sheet_name in edinburgh_df:
-    edinburgh_df[sheet_name] = edinburgh_df[sheet_name].dropna()
-
-for sheet_name in strathspey_df:
-    strathspey_df[sheet_name] = strathspey_df[sheet_name].dropna()
-
-
-# 
-
-# print cleaned data info
-print("Cleaned Edinburgh Daytime Data:")
-for sheet_name in edinburgh_df:
-    print(f"Sheet: {sheet_name}, Shape: {edinburgh_df[sheet_name].shape}")
-
-print("\nCleaned Strathspey Daytime Data:")
-for sheet_name in strathspey_df:
-    print(f"Sheet: {sheet_name}, Shape: {strathspey_df[sheet_name].shape}")
-
-    '''
+print(edinburgh_df.head(50))
+print(strathspey_df.head(50))
