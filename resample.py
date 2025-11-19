@@ -122,6 +122,11 @@ def apply_sinusoidal_temperature(minute_df, temp_data):
 # Apply sinusoidal temperature estimation
 minute_df = apply_sinusoidal_temperature(minute_df, temp_data)
 
+# Round temperature columns to 4 decimal places
+minute_df['temp_mean'] = minute_df['temp_mean'].round(4)
+minute_df['temp_min'] = minute_df['temp_min'].round(4)
+minute_df['temp_max'] = minute_df['temp_max'].round(4)
+
 # Export to CSV
 minute_df.to_csv('dataOut/temperature_minute_2012.csv', index=False)
 print(f"\nTemperature estimates for every minute in 2012 exported to dataOut/temperature_minute_2012.csv")
