@@ -12,7 +12,7 @@ for sheet_name in edinburgh_df:
 
 for sheet_name in strathspey_df:
     strathspey_df[sheet_name] = strathspey_df[sheet_name].iloc[5:].reset_index(drop=True)
-
+'''
 # drop astronomical twilight rows in Strathspey data
 twilight_pattern = re.compile(r'astronomical twilight', re.IGNORECASE)
 
@@ -21,13 +21,28 @@ for sheet_name in strathspey_df:
 # drop astrological twilight rows in editburgh data
 for sheet_name in edinburgh_df:
     edinburgh_df[sheet_name] = edinburgh_df[sheet_name][~edinburgh_df[sheet_name].apply(lambda row: row.astype(str).str.contains(twilight_pattern).any(), axis=1)].reset_index(drop=True)
-    
+
+# drop nautical twilight rows in all data
+nautical_pattern = re.compile(r'nautical twilight', re.IGNORECASE)
+for sheet_name in edinburgh_df:
+    edinburgh_df[sheet_name] = edinburgh_df[sheet_name][~edinburgh_df[sheet_name].apply(lambda row: row.astype(str).str.contains(nautical_pattern).any(), axis=1)].reset_index(drop=True)
+for sheet_name in strathspey_df:
+    strathspey_df[sheet_name] = strathspey_df[sheet_name][~strathspey_df[sheet_name].apply(lambda row: row.astype(str).str.contains(nautical_pattern).any(), axis=1)].reset_index(drop=True)
+'''
 # remove empty rows
 for sheet_name in edinburgh_df:
     edinburgh_df[sheet_name] = edinburgh_df[sheet_name].dropna(how='all').reset_index(drop=True)
 
 for sheet_name in strathspey_df:
     strathspey_df[sheet_name] = strathspey_df[sheet_name].dropna(how='all').reset_index(drop=True)
+
+# remove rows without a date in the first column
+for sheet_name in edinburgh_df:
+    first_col = edinburgh_df[sheet_name].columns[0]
+    edinburgh_df[sheet_name] = edinburgh_df[sheet_name][pd.to_numeric(edinburgh_df[sheet_name][first_col], errors='coerce').notnull()].reset_index(drop=True)
+for sheet_name in strathspey_df:
+    first_col = strathspey_df[sheet_name].columns[0]
+    strathspey_df[sheet_name] = strathspey_df[sheet_name][pd.to_numeric(strathspey_df[sheet_name][first_col], errors='coerce').notnull()].reset_index(drop=True)
 
 # apply column names from config.py
 for sheet_name in edinburgh_df:
