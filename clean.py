@@ -13,6 +13,15 @@ for sheet_name in edinburgh_df:
 for sheet_name in strathspey_df:
     strathspey_df[sheet_name] = strathspey_df[sheet_name].iloc[5:].reset_index(drop=True)
 
+# drop astronomical twilight rows in Strathspey data
+twilight_pattern = re.compile(r'astronomical twilight', re.IGNORECASE)
+
+for sheet_name in strathspey_df:
+    strathspey_df[sheet_name] = strathspey_df[sheet_name][~strathspey_df[sheet_name].apply(lambda row: row.astype(str).str.contains(twilight_pattern).any(), axis=1)].reset_index(drop=True)
+# drop astrological twilight rows in editburgh data
+for sheet_name in edinburgh_df:
+    edinburgh_df[sheet_name] = edinburgh_df[sheet_name][~edinburgh_df[sheet_name].apply(lambda row: row.astype(str).str.contains(twilight_pattern).any(), axis=1)].reset_index(drop=True)
+    
 # remove empty rows
 for sheet_name in edinburgh_df:
     edinburgh_df[sheet_name] = edinburgh_df[sheet_name].dropna(how='all').reset_index(drop=True)
