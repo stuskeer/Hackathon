@@ -1,42 +1,24 @@
 import pandas as pd
 from ingest import load_excel_data
 
-### Concat all sheets into single dataframes ###
-def concat_edinburgh_data(edinburgh_excel):
-    """Concatenate all Edinburgh sheets into a single dataframe."""
-    dfs = []
-    
-    for sheet_name, df in edinburgh_excel.items():
-        # Add a column to track the source sheet (optional, for debugging)
-        df['source_sheet'] = sheet_name
-        dfs.append(df)
-    
-    return pd.concat(dfs, ignore_index=True)
+# start with data loading
+edinburgh_df, strathspey_df = load_excel_data()
 
-def concat_strathspey_data(strathspey_excel):
-    """Concatenate all Strathspey sheets into a single dataframe."""
-    dfs = []
-    
-    for sheet_name, df in strathspey_excel.items():
-        # Add a column to track the source sheet (optional, for debugging)
-        df['source_sheet'] = sheet_name
-        dfs.append(df)
-    
-    return pd.concat(dfs, ignore_index=True)
+# remove nan values
+for sheet_name in edinburgh_df:
+    edinburgh_df[sheet_name] = edinburgh_df[sheet_name].dropna()
 
-if __name__ == "__main__":
-    # Load the data from ingest
-    edinburgh_excel, strathspey_excel = load_excel_data()
-    
-    # Concatenate into two dataframes
-    edinburgh_df = concat_edinburgh_data(edinburgh_excel)
-    strathspey_df = concat_strathspey_data(strathspey_excel)
- ### concat end ###
+for sheet_name in strathspey_df:
+    strathspey_df[sheet_name] = strathspey_df[sheet_name].dropna()
 
 
-    print("Edinburgh DataFrame:")
-    print(edinburgh_df.head())
-    
-    print("\nStrathspey DataFrame:")
-    print(strathspey_df.head())
+# 
 
+# print cleaned data info
+print("Cleaned Edinburgh Daytime Data:")
+for sheet_name in edinburgh_df:
+    print(f"Sheet: {sheet_name}, Shape: {edinburgh_df[sheet_name].shape}")
+
+print("\nCleaned Strathspey Daytime Data:")
+for sheet_name in strathspey_df:
+    print(f"Sheet: {sheet_name}, Shape: {strathspey_df[sheet_name].shape}")
